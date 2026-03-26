@@ -7,7 +7,6 @@ server or model checkpoint. The model is monkey-patched with a dummy pipeline.
 import io
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock
 
 import pytest
 from PIL import Image

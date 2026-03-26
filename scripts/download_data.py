@@ -15,7 +15,6 @@ Usage:
 """
 
 import argparse
-import os
 import sys
 import urllib.request
 from pathlib import Path
@@ -159,7 +158,7 @@ def main() -> None:
 
     # Step 2: Extract
     print("[2/3] Extracting image pairs...")
-    n = extract_mat(mat_path, output_dir)
+    extract_mat(mat_path, output_dir)
 
     # Step 3: Stats
     print("[3/3] Dataset ready!")

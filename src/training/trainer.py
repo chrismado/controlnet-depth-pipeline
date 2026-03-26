@@ -276,8 +276,6 @@ class Trainer:
 
         # ControlNet features from EMA model
         image_size = depth.shape[-1]
-        dummy_noise = torch.randn(n_samples, 3, image_size, image_size, device=self.device)
-        t_zeros = torch.zeros(n_samples, device=self.device, dtype=torch.long)
 
         # Use DDIM for speed
         def model_fn(x, t, **kw):

@@ -9,8 +9,6 @@ Tracks:
 """
 
 import time
-from functools import wraps
-from typing import Callable
 
 import torch
 from prometheus_client import Counter, Histogram, Gauge, generate_latest, CONTENT_TYPE_LATEST

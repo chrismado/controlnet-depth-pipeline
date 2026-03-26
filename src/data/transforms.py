@@ -6,7 +6,6 @@ image and its paired depth map so correspondence is preserved.
 """
 
 import random
-from typing import Any
 
 import torch
 import torchvision.transforms.functional as TF

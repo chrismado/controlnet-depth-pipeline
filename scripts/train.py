@@ -11,7 +11,6 @@ import sys
 from pathlib import Path
 
 import yaml
-import torch
 from torch.utils.data import DataLoader
 
 # Ensure src/ is importable
