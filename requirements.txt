@@ -1,0 +1,11 @@
+torch>=2.0
+torchvision
+numpy
+Pillow
+pyyaml
+wandb
+fastapi
+uvicorn
+python-multipart
+prometheus-client
+tqdm

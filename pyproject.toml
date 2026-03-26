@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "controlnet-depth-pipeline"
+version = "0.1.0"
+description = "Depth-conditioned image generation using ControlNet-style spatial conditioning"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.0",
+    "torchvision",
+    "numpy",
+    "Pillow",
+    "pyyaml",
+    "wandb",
+    "fastapi",
+    "uvicorn",
+    "prometheus-client",
+    "tqdm",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

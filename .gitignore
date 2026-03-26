@@ -1,0 +1,38 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Data and checkpoints (large files)
+/data/
+checkpoints/
+*.pt
+*.pth
+
+# Results
+results/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Environment
+.env
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# W&B
+wandb/
+
+# Pytest
+.pytest_cache/
+
+# Ruff
+.ruff_cache/

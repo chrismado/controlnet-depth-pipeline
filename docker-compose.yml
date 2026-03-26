@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  inference:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./checkpoints:/app/checkpoints:ro
+    environment:
+      - CHECKPOINT_PATH=checkpoints/checkpoint_final.pt
+      - DEVICE=cuda
+      - DDIM_STEPS=50
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
