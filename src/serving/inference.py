@@ -72,18 +72,68 @@ class InferencePipeline:
 
         print(f"Model loaded from {checkpoint_path} (image_size={self.image_size})")
 
+    # Minimum and maximum accepted input dimensions (before resize)
+    MIN_DEPTH_SIZE = 8
+    MAX_DEPTH_SIZE = 4096
+
+    def validate_depth_image(self, depth_image: Image.Image) -> None:
+        """Validate a depth map image before preprocessing.
+
+        Checks:
+            - Image dimensions are within acceptable bounds.
+            - Image is not degenerate (e.g. 0-width or 0-height).
+
+        Args:
+            depth_image: PIL image to validate.
+
+        Raises:
+            ValueError: If the depth map fails validation.
+        """
+        w, h = depth_image.size
+        if w == 0 or h == 0:
+            raise ValueError(f"Depth map has zero dimension: {w}x{h}")
+        if w < self.MIN_DEPTH_SIZE or h < self.MIN_DEPTH_SIZE:
+            raise ValueError(
+                f"Depth map too small: {w}x{h} "
+                f"(minimum {self.MIN_DEPTH_SIZE}x{self.MIN_DEPTH_SIZE})"
+            )
+        if w > self.MAX_DEPTH_SIZE or h > self.MAX_DEPTH_SIZE:
+            raise ValueError(
+                f"Depth map too large: {w}x{h} "
+                f"(maximum {self.MAX_DEPTH_SIZE}x{self.MAX_DEPTH_SIZE})"
+            )
+
     def preprocess_depth(self, depth_image: Image.Image) -> torch.Tensor:
-        """Convert a PIL depth image to model input tensor.
+        """Validate and convert a PIL depth image to model input tensor.
+
+        Runs validation checks, converts to grayscale, resizes to model
+        resolution, and normalises to [0, 1]. Constant-value depth maps
+        are accepted but produce a zero tensor (no spatial conditioning).
 
         Args:
             depth_image: PIL image (any mode — will be converted to grayscale).
 
         Returns:
             (1, 1, H, W) float32 tensor in [0, 1] on self.device.
+
+        Raises:
+            ValueError: If the depth map fails validation.
         """
+        self.validate_depth_image(depth_image)
+
         depth = depth_image.convert("L")
         depth = TF.resize(depth, [self.image_size, self.image_size])
         depth_t = TF.to_tensor(depth)  # (1, H, W) in [0, 1]
+
+        # Normalise to full [0, 1] range for non-standard input ranges
+        d_min = depth_t.min()
+        d_max = depth_t.max()
+        if d_max - d_min > 1e-6:
+            depth_t = (depth_t - d_min) / (d_max - d_min)
+        else:
+            # Constant depth map: no spatial signal, zero out
+            depth_t = torch.zeros_like(depth_t)
+
         return depth_t.unsqueeze(0).to(self.device)
 
     def postprocess(self, samples: torch.Tensor) -> list[Image.Image]:
