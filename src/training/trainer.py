@@ -333,7 +333,7 @@ class Trainer:
 
     def load_checkpoint(self, path: str | Path) -> None:
         """Resume training from a checkpoint."""
-        state = torch.load(path, map_location=self.device, weights_only=False)
+        state = torch.load(path, map_location=self.device, weights_only=True)
         self.unet.load_state_dict(state["unet"])
         self.controlnet.load_state_dict(state["controlnet"])
         self.ema_unet.load_state_dict(state["ema_unet"])

@@ -115,7 +115,7 @@ def evaluate_checkpoint(
     from src.model import ControlNet, GaussianDiffusion, UNet
 
     # Load checkpoint
-    state = torch.load(checkpoint_path, map_location=device, weights_only=False)
+    state = torch.load(checkpoint_path, map_location=device, weights_only=True)
     config = state.get("config", {})
 
     # Reconstruct models

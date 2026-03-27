@@ -37,7 +37,7 @@ class InferencePipeline:
         self.ddim_steps = ddim_steps
 
         # Load checkpoint
-        state = torch.load(checkpoint_path, map_location=self.device, weights_only=False)
+        state = torch.load(checkpoint_path, map_location=self.device, weights_only=True)
         config = state.get("config", {})
         self.image_size = config.get("image_size", 128)
 
